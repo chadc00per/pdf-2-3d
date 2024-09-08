@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Scene with PDF</title>
+    <script src="config.js"></script>
+    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        background-color: black;
+      }
+      .clickable-edge {
+        position: absolute;
+        width: 10%;
+        height: 100%;
+        top: 0;
+        cursor: pointer;
+        z-index: 10;
+      }
+      #left-edge {
+        left: 0;
+      }
+      #right-edge {
+        right: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <a-scene>
+      <a-entity id="pdf-container" position="0 0 -3.3"></a-entity>
+      <a-sky color="#333"></a-sky>
+      <a-camera id="camera" position="0 0 0" wasd-controls="fly: true" look-controls="enabled: false"></a-camera>
+    </a-scene>
+
+    <div id="left-edge" class="clickable-edge"></div>
+    <div id="right-edge" class="clickable-edge"></div>
+
+    <script>
+      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+
+      let pdfDoc = null,
+          scale = 1.5;
+
+      function renderPage(num, xOffset) {
+        return pdfDoc.getPage(num).then(function(page) {
+          const viewport = page.getViewport({ scale: scale });
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.height = viewport.height;
+          canvas.width = viewport.width;
+
+          const renderContext = {
+            canvasContext: ctx,
+            viewport: viewport
+          };
+
+          return page.render(renderContext).promise.then(function() {
+            console.log(`PDF page ${num} rendered on canvas`);
+            
+            const pdfContainer = document.querySelector('#pdf-container');
+            const newPlane = document.createElement('a-plane');
+            newPlane.setAttribute('id', `pdf-plane-${num}`);
+            newPlane.setAttribute('position', `${xOffset} 0 0`);
+            newPlane.setAttribute('width', '4');
+            pdfContainer.appendChild(newPlane);
+
+            const imgTexture = new Image();
+            imgTexture.src = canvas.toDataURL();
+            imgTexture.onload = function() {
+              newPlane.setAttribute('material', 'src', imgTexture.src);
+
+              const aspectRatio = viewport.width / viewport.height;
+              const planeWidth = newPlane.getAttribute('width');
+              const planeHeight = planeWidth / aspectRatio;
+              newPlane.setAttribute('height', planeHeight);
+            };
+          });
+        }).catch(function(error) {
+          console.error('Error rendering the page:', error);
+        });
+      }
+
+      pdfjsLib.getDocument(config.pdf).promise.then(function(pdfDoc_) {
+        console.log('PDF loaded successfully');
+        pdfDoc = pdfDoc_;
+
+        const numPages = pdfDoc.numPages;
+        let xOffset = 0;
+        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+          renderPage(pageNum, xOffset);
+          xOffset += 6;
+        }
+      }).catch(function(error) {
+        console.error('Error loading PDF:', error);
+      });
+
+      let currentPage = 1;
+
+      function smoothMoveToPage(pageNum) {
+        const camera = document.querySelector('#camera');
+        const startPosition = camera.getAttribute('position');
+        const endPosition = { x: (pageNum - 1) * 6, y: 0, z: 0 };
+        const duration = 1000;
+        const startTime = performance.now();
+
+        function animate(time) {
+          const elapsed = time - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+          const newPosition = {
+            x: startPosition.x + (endPosition.x - startPosition.x) * easeProgress,
+            y: startPosition.y + (endPosition.y - startPosition.y) * easeProgress,
+            z: startPosition.z + (endPosition.z - startPosition.z) * easeProgress
+          };
+
+          camera.setAttribute('position', newPosition);
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+      document.getElementById('left-edge').addEventListener('click', function() {
+        if (currentPage > 1) {
+          currentPage--;
+          smoothMoveToPage(currentPage);
+        }
+      });
+
+      document.getElementById('right-edge').addEventListener('click', function() {
+        if (currentPage < pdfDoc.numPages) {
+          currentPage++;
+          smoothMoveToPage(currentPage);
+        }
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === '+' || event.key === '=') {
+          const camera = document.querySelector('#camera');
+          const startPosition = camera.getAttribute('position');
+          const endPosition = { x: startPosition.x, y: startPosition.y, z: startPosition.z - 1 };
+          const duration = 1000;
+          const startTime = performance.now();
+
+          function animate(time) {
+            const elapsed = time - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+            const newPosition = {
+              x: startPosition.x,
+              y: startPosition.y,
+              z: startPosition.z + (endPosition.z - startPosition.z) * easeProgress
+            };
+
+            camera.setAttribute('position', newPosition);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+      });
+
+      document.addEventListener('keydown', function(event) {
+        if (event.key === '-') {
+          const camera = document.querySelector('#camera');
+          const startPosition = camera.getAttribute('position');
+          const endPosition = { x: startPosition.x, y: startPosition.y, z: startPosition.z + 1 };
+          const duration = 1000;
+          const startTime = performance.now();
+
+          function animate(time) {
+            const elapsed = time - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easeProgress = 1 - Math.pow(1 - progress, 3);
+
+            const newPosition = {
+              x: startPosition.x,
+              y: startPosition.y,
+              z: startPosition.z + (endPosition.z - startPosition.z) * easeProgress
+            };
+
+            camera.setAttribute('position', newPosition);
+
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          }
+
+          requestAnimationFrame(animate);
+        }
+      });
+    </script>
+  </body>
+</html>
