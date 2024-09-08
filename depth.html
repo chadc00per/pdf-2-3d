@@ -14,8 +14,8 @@
     <a-scene>
       <a-light type="ambient" color="#fff" intensity="1"></a-light>
       <a-entity id="pdf-container" position="0 0 -3.3"></a-entity>
-      <a-sky color="#000"></a-sky>
-      <a-camera id="camera" position="0 0 0" wasd-controls="fly: true" look-controls="enabled: false"></a-camera>
+
+      <a-camera id="camera" position="0 0 0" wasd-controls="enabled: false" look-controls="enabled: false"></a-camera>
     </a-scene>
 
     <script>
@@ -109,6 +109,33 @@
         requestAnimationFrame(animate);
       }
 
+      function resetCameraPosition() {
+        const camera = document.querySelector('#camera');
+        const startPosition = camera.getAttribute('position');
+        const endPosition = { x: 0, y: 0, z: startPosition.z };
+        const startTime = performance.now();
+
+        function animate(time) {
+          const elapsed = time - startTime;
+          const progress = Math.min(elapsed / duration, 1);
+          const easeInOutProgress = progress < 0.5 ? 2 * Math.pow(progress, 2) : -1 + (4 - 2 * progress) * progress; // Ease in and out
+
+          const newPosition = {
+            x: startPosition.x + (endPosition.x - startPosition.x) * easeInOutProgress,
+            y: startPosition.y + (endPosition.y - startPosition.y) * easeInOutProgress,
+            z: startPosition.z
+          };
+
+          camera.setAttribute('position', newPosition);
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
       document.addEventListener('keydown', function(event) {
         if (event.key === '+' || event.key === '=') {
           const camera = document.querySelector('#camera');
@@ -173,12 +200,14 @@
           if (currentPage > pdfDoc.numPages) {
             currentPage = 1;
           }
+          resetCameraPosition();
           smoothMoveToPage(currentPage);
         } else if (event.key === 'ArrowDown') {
           currentPage--;
           if (currentPage < 1) {
             currentPage = pdfDoc.numPages;
           }
+          resetCameraPosition();
           smoothMoveToPage(currentPage);
         }
       });
@@ -194,6 +223,7 @@
         if (currentPage > pdfDoc.numPages) {
           currentPage = 1;
         }
+        resetCameraPosition();
         smoothMoveToPage(currentPage);
       });
     </script>
