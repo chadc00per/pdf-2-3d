@@ -17,7 +17,7 @@
 
       <a-camera id="camera" position="0 0 0" wasd-controls="enabled: false" look-controls="enabled: false"></a-camera>
     </a-scene>
-
+    <footer class="glass" style="display: none;"><div id="pickerContainer"></div></footer>
     <script>
       pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
 
@@ -227,5 +227,6 @@
         smoothMoveToPage(currentPage);
       });
     </script>
+    <script src="picker.js"></script>
   </body>
 </html>
