@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="flat/styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>PDF Viewer</title>
+    <script src="config.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        if (config.page === 'flat.html') {
+          window.location.href = 'flat.html';
+        } else if (config.page === 'sbs.html') {
+          window.location.href = 'sbs.html';
+        } else if (config.page === 'depth.html') {
+          window.location.href = 'depth.html';
+        } else {
+          console.error('Invalid page specified in config');
+        }
+      });
+    </script>
+  </head>
+  <body>
+  </body>
+</html>

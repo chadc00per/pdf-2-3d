@@ -1,19 +1,3 @@
-:root {
-    --background-color: #000;
-}
-
-html, body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--background-color);
-  }
-
   #pdf-container {
     width: 100%;
     height: 100%;
@@ -23,7 +7,6 @@ html, body {
     justify-content: center;
     align-items: center;
   }
-
   #pdf-canvas {
     width: 100%;
     height: 100%;
@@ -35,25 +18,6 @@ html, body {
     object-fit: contain;
     transition: transform 0.5s ease-in-out;
   }
-
-  footer {
-    position: absolute;
-    bottom: 10px;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    display: flex;
-    width: 50%;
-    height: auto;
-    flex-direction: column;
-    margin: 0 auto;
-    transition: opacity 0.5s ease-in-out;
-    opacity: 0;
-  }
-  footer:hover {
-    opacity: 1;
-  }
-
   #page-info {
     font-size: 12px; font-weight: 300; white-space: nowrap;
   }
@@ -68,24 +32,6 @@ html, body {
     font-family: 'Roboto', sans-serif;
     width: 90%;
   }
-
-  footer button {
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
-    border: none;
-    background-color: transparent;
-    color: inherit;
-    cursor: pointer;
-    transition: color 0.3s ease-in-out;
-    font-weight: inherit;
-    font-family: inherit;
-    width: 100%;
-  }
-  button:hover {
-    color: rgba(255, 255, 255, 1);
-  }
-
   input[type="range"] {
     -webkit-appearance: none;
     width: 50%;
@@ -118,14 +64,4 @@ html, body {
   }
   input[type="range"]::-moz-range-thumb:hover {
     background: #ddd;
-  }
-
-  .glass {
-    background-color: rgba(255, 255, 255, 0.33);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    padding: 10px;
-    overflow: hidden;
   }

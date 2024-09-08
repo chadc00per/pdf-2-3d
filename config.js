@@ -1,5 +1,8 @@
 const config = {
-    pdf: 'pdf.pdf',
+    pdf: localStorage.getItem('pdf-picker') || 'pdf.pdf',
     bgImage: 'chad.jpeg',
-    fullScreenVR: false
+    fullScreenVR: false,
+    page: 'depth.html'
+    //page: 'flat.html',
+    //page: 'sbs.html',
 }
