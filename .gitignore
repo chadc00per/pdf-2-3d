@@ -1,0 +1,4 @@
+node_modules/
+*.pdf
+.env
+package-lock.json

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css">
+    <title>PDF Viewer</title>
+    <script src="config.js"></script>
+  </head>
+  <body>
+    <div id="pdf-container">
+      <canvas id="pdf-canvas"></canvas>
+    </div>
+
+    <footer id="pdf-controls" class="glass">
+      <div class="pdf-controls-row">
+        <button id="prev-page">Previous</button>
+        <div id="page-info"><span id="page_num"></span> / <span id="page_count"></span></div>
+        <button id="next-page">Next</button>
+      </div>
+      <div class="pdf-controls-row" id="zoom-controls">
+        <input type="range" id="zoom-slider" min="1" max="4" step="0.1" value="1">
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="scripts.js"></script>
+  </body>
+</html>

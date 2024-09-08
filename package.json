@@ -1,0 +1,15 @@
+{
+  "name": "pdf-2-3d",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx vite"
+  },
+  "author": "chadc00per",
+  "license": "None",
+  "description": "",
+  "dependencies": {
+    "a-frame": "^0.0.0",
+    "three": "^0.168.0"
+  }
+}
