@@ -1,4 +1,7 @@
 node_modules/
 *.pdf
+*.jpeg
+*.png
+*.jpg
 .env
 package-lock.json

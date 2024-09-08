@@ -1,0 +1,22 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: black;
+  }
+.clickable-edge {
+    position: absolute;
+    width: 10%;
+    height: 100%;
+    top: 0;
+    cursor: pointer;
+    z-index: 10;
+  }
+  #left-edge {
+    left: 0;
+  }
+  #right-edge {
+    right: 0;
+  }
+  .a-enter-vr {
+    display: none;
+  }

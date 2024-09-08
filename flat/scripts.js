@@ -1,4 +1,3 @@
-
 let pdfDoc = null,
     pageNum = 1,
     pageRendering = false,
