@@ -113,16 +113,34 @@
 
           if (progress < 1) {
             requestAnimationFrame(animate);
+          } else {
+            console.log(`Page: ${pageNum}`);
           }
         }
 
         requestAnimationFrame(animate);
       }
 
+      function updateLeftEdgeClickability() {
+        const leftEdge = document.getElementById('left-edge');
+        if (currentPage === 1) {
+          leftEdge.style.pointerEvents = 'none';
+          leftEdge.style.opacity = '0.5';
+        } else {
+          leftEdge.style.pointerEvents = 'auto';
+          leftEdge.style.opacity = '1';
+        }
+      }
+
       document.getElementById('left-edge').addEventListener('click', function() {
         if (currentPage > 1) {
           currentPage--;
           smoothMoveToPage(currentPage);
+          updateLeftEdgeClickability();
+        } else {
+          currentPage = pdfDoc.numPages;
+          smoothMoveToPage(currentPage);
+          updateLeftEdgeClickability();
         }
       });
 
@@ -130,11 +148,34 @@
         if (currentPage < pdfDoc.numPages) {
           currentPage++;
           smoothMoveToPage(currentPage);
+        } else {
+          currentPage = 1;
+          smoothMoveToPage(currentPage);
         }
+        updateLeftEdgeClickability();
       });
 
       document.addEventListener('keydown', function(event) {
-        if (event.key === '+' || event.key === '=') {
+        if (event.key === 'ArrowLeft') {
+          if (currentPage > 1) {
+            currentPage--;
+            smoothMoveToPage(currentPage);
+            updateLeftEdgeClickability();
+          } else {
+            currentPage = pdfDoc.numPages;
+            smoothMoveToPage(currentPage);
+            updateLeftEdgeClickability();
+          }
+        } else if (event.key === 'ArrowRight') {
+          if (currentPage < pdfDoc.numPages) {
+            currentPage++;
+            smoothMoveToPage(currentPage);
+          } else {
+            currentPage = 1;
+            smoothMoveToPage(currentPage);
+          }
+          updateLeftEdgeClickability();
+        } else if (event.key === '+') {
           const camera = document.querySelector('#camera');
           const startPosition = camera.getAttribute('position');
           const endPosition = { x: startPosition.x, y: startPosition.y, z: startPosition.z - 1 };
@@ -160,11 +201,7 @@
           }
 
           requestAnimationFrame(animate);
-        }
-      });
-
-      document.addEventListener('keydown', function(event) {
-        if (event.key === '-') {
+        } else if (event.key === '-') {
           const camera = document.querySelector('#camera');
           const startPosition = camera.getAttribute('position');
           const endPosition = { x: startPosition.x, y: startPosition.y, z: startPosition.z + 1 };
@@ -192,6 +229,8 @@
           requestAnimationFrame(animate);
         }
       });
+
+      updateLeftEdgeClickability();
     </script>
   </body>
 </html>

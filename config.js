@@ -1,4 +1,5 @@
 const config = {
     pdf: 'pdf.pdf',
-    bgImage: 'chad.jpeg'
+    bgImage: 'chad.jpeg',
+    fullScreenVR: false
 }
