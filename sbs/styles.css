@@ -1,6 +1,5 @@
 .clickable-edge {
     position: absolute;
-    width: 10%;
     height: 100%;
     top: 0;
     cursor: pointer;
@@ -8,7 +7,9 @@
   }
   #left-edge {
     left: 0;
+    width: 13%;
   }
   #right-edge {
     right: 0;
+    width: 87%;
   }
