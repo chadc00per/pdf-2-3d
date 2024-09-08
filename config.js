@@ -1,3 +1,4 @@
 const config = {
-    pdf: 'pdf.pdf'
+    pdf: 'pdf.pdf',
+    bgImage: 'chad.jpeg'
 }
